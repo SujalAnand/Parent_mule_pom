@@ -133,10 +133,10 @@
 						<version>3.3.2</version>
 						<configuration>
 							<cloudHubDeployment>
-								<muleVersion>${mule.version}</muleVersion>
 								<username>${anypoint.username}</username>
 								<password>${anypoint.password}</password>
 								<!--<applicationName>${project.artifactId}-${maven.build.timestamp}</applicationName> -->
+								<muleVersion>4.3.0</muleVersion>
 								<applicationName>${cloudhub.env}-${project.artifactId}</applicationName>
 								<environment>${cloudhub.env}</environment>
 								<businessGroup>${anypoint.businessGroup}</businessGroup>
