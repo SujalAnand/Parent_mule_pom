@@ -5,7 +5,7 @@ pipeline {
         jdk 'jdk8' 
   }
   stages {
-    stage ('Initialize') {
+    stage ('Initialize path') {
             steps {
                 sh '''
                     echo "PATH = ${PATH}"
@@ -13,7 +13,7 @@ pipeline {
                 ''' 
        }
     }
-    stage('install') {
+    stage('Install Dependencies On local Cache') {
       steps {
         sh 'mvn clean install'
       }
