@@ -21,7 +21,7 @@
 		<!-- <mule.home>${MULE_HOME}</mule.home> -->
 		<anypoint.username>${env.ANYPOINT_USERNAME}</anypoint.username>
 		<anypoint.password>${env.ANYPOINT_PASSWORD}</anypoint.password>
-		<cloudhub.env>${env.cloudhub_env}</cloundhub.env>
+		<cloudhub.env>${env.cloudhub_env}</cloudhub.env>
 		<cloudhub.region>${env.cloudhub_region}</cloudhub.region>
 		<cloudhub.workers>${env.cloudhub_workers}</cloudhub.workers>
 		<cloudhub.workerType>${env.cloudhub_vcores}</cloudhub.workerType>
