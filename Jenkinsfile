@@ -7,7 +7,7 @@ pipeline {
   stages {
     stage ('Initialize path') {
             steps {
-                sh '''
+                bat '''
                     echo "PATH = ${PATH}"
                     echo "M2_HOME = ${M2_HOME}"
                 ''' 
@@ -15,7 +15,7 @@ pipeline {
     }
     stage('Install Dependencies On local Cache') {
       steps {
-        sh 'mvn clean install'
+        bat 'mvn clean install'
       }
     }
   }
