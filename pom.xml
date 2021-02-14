@@ -21,7 +21,7 @@
 		<!-- <mule.home>${MULE_HOME}</mule.home> -->
 		<anypoint.username>${env.ANYPOINT_USERNAME}</anypoint.username>
 		<anypoint.password>${env.ANYPOINT_PASSWORD}</anypoint.password>
-		<cloundhub.env>${env.cloudhub_env}</cloundhub.env>
+		<cloudhub.env>${env.cloudhub_env}</cloundhub.env>
 		<cloudhub.region>${env.cloudhub_region}</cloudhub.region>
 		<cloudhub.workers>${env.cloudhub_workers}</cloudhub.workers>
 		<cloudhub.workerType>${env.cloudhub_vcores}</cloudhub.workerType>
@@ -137,8 +137,8 @@
 								<username>${anypoint.username}</username>
 								<password>${anypoint.password}</password>
 								<!--<applicationName>${project.artifactId}-${maven.build.timestamp}</applicationName> -->
-								<applicationName>${cloundhub.env}-${project.artifactId}</applicationName>
-								<environment>${cloundhub.env}</environment>
+								<applicationName>${cloudhub.env}-${project.artifactId}</applicationName>
+								<environment>${cloudhub.env}</environment>
 								<businessGroup>${anypoint.businessGroup}</businessGroup>
 								<region>${cloudhub.region}</region>
 								<uri>${anypoint.uri}</uri>
