@@ -10,7 +10,11 @@
                   <username>sujalanand056@gmail.com</username>
                   <password>SAbhi#0056</password>
                </server>
-			   
+			   <server>
+                  <id>archetype</id>
+                  <username>sujalanand056@gmail.com</username>
+                  <password>SAbhi#0056</password>
+               </server>
                <server>
                   <id>Release</id>
                   <username>sujalanand056@gmail.com</username>
@@ -50,7 +54,12 @@
                          <url>https://repo.maven.apache.org/maven2/</url>
                          <layout>default</layout>
                      </repository> -->
-					
+						<repository>
+                         <id>archetype</id>
+                         <name>Maven Arche Type</name>
+                         <url>https://muledeploy.jfrog.io/artifactory/Snapshot/</url>
+                         <layout>default</layout>
+                     </repository>
                      <repository>
                          <id>mulesoft-snapshots</id>
                          <name>MuleSoft Snapshot Repository</name>
