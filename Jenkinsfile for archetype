@@ -1,0 +1,71 @@
+pipeline {
+  agent any
+  tools { 
+        maven 'maven-3.6.3'
+        jdk 'jdk8' 
+  }
+  environment {
+		arche_groupId = "${arche_groupId}"
+		arche_artifactId = "${arche_artifactId}"
+		arche_version = "${archetype_version}"
+        projectName = "${project_name}"
+		version = "${snapshot_version}"
+		groupid = "${new_groupid}"
+		feature_branch = "${feature_branch}"
+		dev_name = "${dev_name}"
+		MY_GH = 'C:\\Program Files (x86)\\GitHub CLI'
+		dev_email = "${dev_email}"
+      }
+
+
+  stages {
+    stage ('Initialize') {
+            steps {
+                bat '''
+                    echo "PATH = %PATH%"
+                    echo "M2_HOME = %M2_HOME%"
+                ''' 
+       }
+    }
+    stage('Creating project from archetype') {
+      steps {
+	    echo "~~~~~~~Creating project from archetype~~~~~~~~~"
+        bat 'mvn archetype:generate -B -DarchetypeGroupId=%arche_groupId% -DarchetypeArtifactId=%arche_artifactId% -DarchetypeVersion=%arche_version%-SNAPSHOT  -DgroupId=%groupid% -DartifactId=%projectName% -Dversion=%version%-SNAPSHOT'
+		withEnv(['PATH+JENKINSHOME=C:\\Program Files (x86)\\GitHub CLI']) {
+          echo "PATH is: %PATH%"
+		  bat '''
+				echo "Starting Git process ${env.BUILD_VERSION} ..."
+				cd %projectName%
+				git init
+				git add .
+				git commit -m "First Commit"
+				gh repo create %projectName% --public -y
+				git checkout -b %feature_branch% master
+				git push origin %feature_branch%
+				echo "Code Pushed To %feature_branch% branch of repo %projectName%"
+		  '''
+	  }
+
+    }
+  }
+  stage('Init') {
+steps {
+echo "Sending Mail"
+mail bcc: '', body: '''Hi Sujal,
+Code is deployed to your feature branch %feature_branch%, please take the code from repo and start working.
+
+Thanks and Regards,
+Sujal''', cc: '', from: '', replyTo: '', subject: 'start working on API', to: 'sujalanand961@gmail.com'
+}
+	post {
+        success {
+echo "Successfully Mail send"
+        }
+		unsuccessful {
+echo "Failed to send mail"
+}
+    }
+}
+}
+
+}
