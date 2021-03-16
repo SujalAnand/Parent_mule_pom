@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+		  <localRepository>C:\Users\Administrator\.m2\repository</localRepository>
+		  <servers>   
+		  
+               <server>
+                  <id>Snapshot</id>
+                  <username>sujalanand056@gmail.com</username>
+                  <password>SAbhi#0056</password>
+               </server>
+			   
+               <server>
+                  <id>Release</id>
+                  <username>sujalanand056@gmail.com</username>
+                  <password>SAbhi#0056</password>
+               </server>
+		  </servers>
+		  
+		  <profiles>
+		  
+             <profile>
+                 <id>Mule</id>
+                 <activation>
+                     <activeByDefault>true</activeByDefault>
+                 </activation>
+     
+                 <repositories>
+					<repository>
+                        <id>Release</id>
+                        <name>Release</name>
+                        <url>https://muledeploy.jfrog.io/artifactory/Release/</url>
+                        <layout>default</layout>
+                        <!-- <releases>
+                          <enabled>false</enabled>
+                        </releases> -->
+                      </repository>
+
+                     <repository>
+                         <id>mulesoft-releases</id>
+                         <name>MuleSoft Repository</name>
+                         <url>http://repository.mulesoft.org/releases/</url>
+                         <layout>default</layout>
+                     </repository>
+					 
+				<!-- 	 <repository>
+                         <id>maven-central</id>
+                         <name>maven Central</name>
+                         <url>https://repo.maven.apache.org/maven2/</url>
+                         <layout>default</layout>
+                     </repository> -->
+					
+                     <repository>
+                         <id>mulesoft-snapshots</id>
+                         <name>MuleSoft Snapshot Repository</name>
+                         <url>http://repository.mulesoft.org/snapshots/</url>
+                         <layout>default</layout>
+                     </repository>
+                 </repositories>
+
+                <pluginRepositories>
+                    <pluginRepository>
+                        <id>mule-public</id>
+                        <url>https://repository.mulesoft.org/nexus/content/repositories/releases</url>
+                    </pluginRepository>
+
+                </pluginRepositories>
+
+             </profile>
+       </profiles>
+</settings>
