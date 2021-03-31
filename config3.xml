@@ -1,0 +1,150 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.40">
+  <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.8.4"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.8.4">
+      <jobProperties/>
+      <triggers/>
+      <parameters/>
+      <options/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+  </actions>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>API_Version</name>
+          <description>Release version</description>
+          <defaultValue>1.0.0</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>platform_Environment</name>
+          <description>Environment in which Application Deploy</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>Sandbox</string>
+              <string>Production</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>Mule_Runtime</name>
+          <description>Mule Server Runtime Version</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>4.3.0</string>
+              <string>4.2.0</string>
+              <string>4.0.0</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>CloudHub_Workers</name>
+          <description>No. Of workers</description>
+          <defaultValue>1</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>Worker_Size</name>
+          <description>Workers Size</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>0.1</string>
+              <string>0.2</string>
+              <string>1</string>
+              <string>2</string>
+              <string>4</string>
+              <string>8</string>
+              <string>16</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>CloudHub_Region</name>
+          <description>Region in which you want to deploy your Application</description>
+          <defaultValue>us-east-1</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>Cloudhub_Env</name>
+          <description></description>
+          <defaultValue>Dev</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.89">
+    <script>pipeline {
+  agent any
+  tools {
+    maven &apos;maven-3.6.3&apos;
+    jdk &apos;jdk8&apos;
+  }
+  environment {
+    USER_CREDENTIALS = credentials(&apos;AnypointExchangeID&apos;)
+    version = &quot;${API_Version}&quot;
+    platform_env = &quot;${platform_Environment}&quot;
+    muleVersion = &quot;${Mule_Runtime}&quot;
+    workers = &quot;${CloudHub_Workers}&quot;
+    wSize = &quot;${Worker_Size}&quot;
+    region = &quot;${CloudHub_Region}&quot;
+    muleEnv = &quot;${Cloudhub_Env.toLowerCase()}&quot;
+    
+  }
+  stages {
+    stage(&apos;Initialize&apos;) {
+      steps {
+        bat &apos;&apos;&apos;
+		echo &quot;%PATH%&quot;
+		echo &quot;%M2_HOME%&quot;
+            &apos;&apos;&apos; 
+      }
+    }
+
+    stage(&apos;Download Jar from Jfrog&apos;) {
+      steps {
+        echo &quot;~~~~~~~Copying Jar From Jfrog~~~~~~~~~&quot;
+        bat &apos;mvn dependency:copy -Dartifact=&quot;com.mycompany:ci-cd-jenkins-mule:%version%:jar:mule-application&quot; -DoutputDirectory=&quot;C:\\Users\\Administrator\\Desktop\\Jar&quot;&apos;
+      }
+
+      post {
+        success {
+          echo &quot;...Download from Artifactory Succeeded for ${env.BUILD_NUMBER}: ${currentBuild.currentResult}&quot;
+        }
+        failure {
+          echo &quot;...Download from Artifactory Failed for ${env.BUILD_NUMBER}: ${currentBuild.currentResult}&quot;
+        }
+      }
+
+    }
+
+    stage(&apos;Deploying To Production&apos;) {
+      steps {
+        echo &quot;~~~~~~~Deployment to Production Environment~~~~~~~~~&quot;
+        bat &apos;&quot;C:\\Users\\Administrator\\AppData\\Roaming\\npm\\&quot;anypoint-cli --username=%USER_CREDENTIALS_USR% --password=%USER_CREDENTIALS_PSW% runtime-mgr cloudhub-application deploy --environment &quot;%platform_env%&quot; --runtime &quot;%muleVersion%&quot; --workers &quot;%workers%&quot; --workerSize &quot;%wSize%&quot; --region &quot;%region%&quot; &quot;Prod-ci-cd-jenkins-project&quot; &quot;C:\\Users\\Administrator\\Desktop\\Jar\\ci-cd-jenkins-mule-%version%-mule-application.jar&quot; --property &quot;mule.env:%muleEnv%&quot;&apos;
+        echo &quot;~~~~~~~Describing the status Of API Deployed~~~~~~~~~&quot;
+        bat &apos;&quot;C:\\Users\\Administrator\\AppData\\Roaming\\npm\\&quot;anypoint-cli --username=%USER_CREDENTIALS_USR% --password=%USER_CREDENTIALS_PSW% runtime-mgr cloudhub-application describe --environment &quot;%platform_env%&quot; Prod-ci-cd-demo-project&apos;
+      }
+
+      post {
+        success {
+          echo &quot;...Successfully Deploying to Anypoint Platform&quot;
+        }
+        failure {
+          echo &quot;...Failed to deploy to Anypoint Platform&quot;
+        }
+      }
+    }
+
+  }
+}
+</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
