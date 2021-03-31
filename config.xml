@@ -12,22 +12,29 @@
   <description></description>
   <keepDependencies>false</keepDependencies>
   <properties>
-    <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
-      <triggers>
-        <hudson.triggers.SCMTrigger>
-          <spec>* * * * *</spec>
-          <ignorePostCommitHooks>false</ignorePostCommitHooks>
-        </hudson.triggers.SCMTrigger>
-      </triggers>
-    </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>release_version</name>
+          <description>Release version Of Code</description>
+          <defaultValue>1.0.0</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>dev_version</name>
+          <description>New Snapshot version</description>
+          <defaultValue>1.0.1</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
   </properties>
   <definition class="org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition" plugin="workflow-cps@2.89">
     <scm class="hudson.plugins.git.GitSCM" plugin="git@4.6.0">
       <configVersion>2</configVersion>
       <userRemoteConfigs>
         <hudson.plugins.git.UserRemoteConfig>
-          <url>https://github.com/SujalAnand/DevOps-MuleSoft.git</url>
-          <credentialsId>GitHub</credentialsId>
+          <url>git@github.com:SujalAnand/DevOps-MuleSoft.git</url>
         </hudson.plugins.git.UserRemoteConfig>
       </userRemoteConfigs>
       <branches>
@@ -37,9 +44,13 @@
       </branches>
       <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
       <submoduleCfg class="empty-list"/>
-      <extensions/>
+      <extensions>
+        <hudson.plugins.git.extensions.impl.LocalBranch>
+          <localBranch>master</localBranch>
+        </hudson.plugins.git.extensions.impl.LocalBranch>
+      </extensions>
     </scm>
-    <scriptPath>Jenkinsfile</scriptPath>
+    <scriptPath>JenkinsfileRelease</scriptPath>
     <lightweight>true</lightweight>
   </definition>
   <triggers/>
